@@ -3,7 +3,7 @@ import pandas as pd
 from src.jobs.checker import check
 
 
-def divide(df):
+def _divide(df):
     medians = dict()
     for column in df.columns[:-1]:
         medians[column] = np.mean(df[column].values)
@@ -29,21 +29,22 @@ def divide(df):
     return part_df
 
 
-def divide_all(part_df):
+def _divide_all(part_df):
     while checker := check(part_df):
         for part in checker:
             df = part_df[part_df['partition'] == part]
             part_df.drop(df.index, axis=0, inplace=True)
-            part_df = pd.concat([divide(df), part_df], ignore_index=True)
+            part_df = pd.concat([_divide(df), part_df], ignore_index=True)
     part_df['group'] = [index[:-1] for index in part_df['partition'].values]
     return part_df
 
 
-def dominates(p1, p2):
+def _dominates(p1, p2):
     return all(x <= y for x, y in zip(p1, p2)) and any(x < y for x, y in zip(p1, p2))
 
 
-def divide_and_conquer(point_df):
+def divide_and_conquer(df):
+    point_df = _divide_all(_divide(df))
     while True:
         before = len(point_df)
 
@@ -57,7 +58,7 @@ def divide_and_conquer(point_df):
             for i in indices:
                 for j in indices:
                     if i != j:
-                        if dominates(
+                        if _dominates(
                             group.loc[i][['x', 'y']].values,
                             group.loc[j][['x', 'y']].values
                         ):
@@ -81,7 +82,7 @@ def divide_and_conquer(point_df):
     for p in last:
         for q in last:
             if p != q:
-                if dominates(p, q):
+                if _dominates(p, q):
                     remove_list.append(q)
     for p in remove_list:
         try:
