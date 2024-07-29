@@ -1,10 +1,10 @@
 import plotly.graph_objects as go
 from src.data.point import Points
-from src.skyline.divide_and_conquer import m_partitioning_dnc, dnc
+from src.skyline.divide_and_conquer import m_partitioning_dnc
 
 
 def main():
-    datas = Points(size=(2, 1000))
+    datas = Points(size=(2, 1000))  # point = 1000 개
     skyline = m_partitioning_dnc(datas.data)
     # skyline = dnc(datas.data)
     fig = go.Figure()

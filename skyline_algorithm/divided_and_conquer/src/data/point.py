@@ -1,6 +1,5 @@
 from typing import Union
 import random
-import numpy as np
 
 
 class Points:
@@ -17,7 +16,7 @@ class Points:
             self.data = [random.sample(range(range_[0], range_[1]), size[0])
                          for _ in range(size[1])]
         else:
-            self.data = np.array(datas)
+            self.data = datas
 
 
 if __name__ == '__main__':

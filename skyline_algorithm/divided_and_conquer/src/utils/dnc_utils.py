@@ -1,5 +1,3 @@
-import sys
-sys.path.append('C:/Users/7lhyu/Documents/skyline_algorithm/skyline_algorithm/divided_and_conquer')
 from typing import Union
 import random
 import numpy as np
@@ -10,26 +8,22 @@ from src.utils.utils import skyline
 def divide(
         datas: Union[list[list[Union[int, float]]]]
         ) -> Union[list[list[Union[int, float]]]]:
-    median = {
-        'x': None,
-        'y': None
-    }
-    median['x'] = np.median([data[0] for data in datas])
-    median['y'] = np.median([data[1] for data in datas])
+    X_median = np.median([data[0] for data in datas])
+    y_median = np.median([data[1] for data in datas])
 
     # partitioning
     part0 = [[x, y]
              for x, y in datas
-             if (x > median['x']) and (y > median['y'])]
+             if (x > X_median) and (y > y_median)]
     part1 = [[x, y]
              for x, y in datas
-             if (x <= median['x']) and (y > median['y'])]
+             if (x <= X_median) and (y > y_median)]
     part2 = [[x, y]
              for x, y in datas
-             if (x <= median['x']) and (y <= median['y'])]
+             if (x <= X_median) and (y <= y_median)]
     part3 = [[x, y]
              for x, y in datas
-             if (x > median['x']) and (y <= median['y'])]
+             if (x > X_median) and (y <= y_median)]
     return [part0, part1, part2, part3]
 
 
