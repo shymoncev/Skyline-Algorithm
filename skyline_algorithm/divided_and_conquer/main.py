@@ -1,22 +1,31 @@
-import matplotlib.pyplot as plt
-from src.data.point import PointsDataFrame
-from src.jobs.dnc_module import divide_and_conquer
+import plotly.graph_objects as go
+from src.data.point import Points
+from src.skyline.divide_and_conquer import m_partitioning_dnc, dnc
 
 
 def main():
-    points = PointsDataFrame(size=(1000, 2), random_seed=42)
-    df = points.df
-    skyline = divide_and_conquer(df)
-    plt.scatter(
-        x=[data[0] for data in df[['x', 'y']].values],
-        y=[data[1] for data in df[['x', 'y']].values],
-        s=3
+    datas = Points(size=(2, 1000))
+    skyline = m_partitioning_dnc(datas.data)
+    # skyline = dnc(datas.data)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=[data[0] for data in datas.data],
+            y=[data[1] for data in datas.data],
+            mode='markers',
+            name='points',
+            marker=dict(size=15)
+            )
         )
-    plt.scatter(
-        x=[data[0] for data in skyline],
-        y=[data[1] for data in skyline]
-        )
-    plt.show()
+    fig.add_trace(
+        go.Scatter(x=[data[0] for data in skyline],
+                   y=[data[1] for data in skyline],
+                   mode='markers',
+                   name='skyline',
+                   marker=dict(size=15)
+                   )
+                   )
+    fig.show()
 
 
 if __name__ == '__main__':

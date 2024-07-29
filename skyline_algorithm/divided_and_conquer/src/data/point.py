@@ -1,43 +1,27 @@
+from typing import Union
+import random
 import numpy as np
-import pandas as pd
-import matplotlib as plt
 
 
-class PointsDataFrame:
+class Points:
     def __init__(
             self,
-            datas: np.ndarray[np.ndarray[int | float]] = None,
-            low: int = 10,
-            high: int | None = 1000,
-            size: tuple[int, int] = (10, 2),
-            random_seed: int | None = None
+            datas: Union[list[list[Union[int, float]]]] = None,
+            size: tuple = (2, 1000),
+            range_: tuple[int, int] = (10, 100),
+            random_seed: int = None
             ) -> None:
-        column = ['x', 'y', 'z', 'w']
-        if datas is not None:
-            df = pd.DataFrame(datas, columns=column[:datas.shape[1]])
-            df['partition'] = ''
-        else:
+        if not datas:
             if random_seed:
-                np.random.seed(random_seed)
-            df = pd.DataFrame(
-                np.random.randint(low, high, size=size),
-                columns=column[:size[1]],
-                index=None
-                )
-            df['partition'] = ''
-        self.df = df
-
-    def show_points(self):
-        if len(self.df.columns) > 3:
-            print(f'The dimention({len(self.df.columns)}) of data > 3')
+                random.seed(42)
+            self.data = [random.sample(range(range_[0], range_[1]), size[0])
+                         for _ in range(size[1])]
         else:
-            if len(self.df.columns) == 2:
-                plt.scatter(data=self.df, x='x', y='y', color='black')
-                plt.show()
-            else:
-                fig = plt.figure(figsize=(9, 6))
-                ax = fig.add_subplot(111, projection='3d')
-                x = self.df.x
-                y = self.df.y
-                z = self.df.z
-                ax.scatter(x, y, z, color='black', alpha=0.5)
+            self.data = np.array(datas)
+
+
+if __name__ == '__main__':
+    point = Points()
+    print(point.data)
+    point = Points(datas=[[1, 2], [3, 4]])
+    print(point.data)
